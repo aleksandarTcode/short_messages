@@ -32,6 +32,9 @@
                 <li class="nav-item">
                     <a href="sent.php" class="nav-link">Sent</a>
                 </li>
+                <li class="nav-item">
+                    <p class="nav-link mb-0"><i class="fas fa-user"></i> Welcome <?php echo $_SESSION['username']; ?></p>
+                </li>
             </ul>
         </div>
     </div>

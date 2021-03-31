@@ -5,6 +5,7 @@ class User {
     public $database;
     public $username;
     public $friend = "";
+    public $msg_text = "";
 
     public function __construct($data_base)
     {
@@ -19,74 +20,25 @@ class User {
         $this->friend=$friend;
     }
 
-    public function inbox_for_current_user(){
-
-        $stmt = $this->database->conn->prepare("SELECT sender,msg_text,time FROM msg WHERE recipient = ? ORDER BY time DESC");
-        $stmt->execute(array($this->username)); // this is recipient, execute parameter must be an array
-
-        $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
-
-       $table = "<table class='table table-bordered mt-5'>
-                <thead>
-                <tr>
-                    <th>Sender</th>
-                    <th>Message</th>
-                    <th>Time</th>
-                </tr>
-                </thead>";
-
-        while($row = $stmt->fetchAll()){
-            foreach ($row as $object){
-
-                $table.="<tbody>
-                 <tr>
-                    <td class='text-center'><strong><a href='thread.php?friend={$object->sender}'>{$object->sender}</a></strong></td>
-                    <td>{$object->msg_text}</td>
-                    <td>{$object->time}</td>
-                 </tr>                
-                 </tbody>";
-            }
-        }
-        $table.=" </table>";
-
-        echo $table;
-
+    public function set_msg_text($msg_text){
+        $this->msg_text=$msg_text;
     }
 
 
-    public function sent_for_current_user(){
+    public function messages_for_current_user($query1,$query1_variable){
 
-        $stmt = $this->database->conn->prepare("SELECT recipient,msg_text,time FROM msg WHERE sender = ? ORDER BY time DESC");
-        $stmt->execute(array($this->username)); // this is sender, execute parameter must be an array
+        $stmt = $this->database->conn->prepare($query1);
+        $stmt->execute(array($query1_variable)); // this is recipient or sender, execute parameter must be an array
 
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
 
-        $table = "<table class='table table-bordered mt-5'>
-                <thead>
-                <tr>
-                    <th>Recipient</th>
-                    <th>Message</th>
-                    <th>Time</th>
-                </tr>
-                </thead>";
+        $row = $stmt->fetchAll();
 
-        while($row = $stmt->fetchAll()){
-            foreach ($row as $object){
+        return $row;
 
-                $table.="<tbody>
-                 <tr>
-                    <td class='text-center'><strong><a href='thread.php?friend={$object->recipient}'>{$object->recipient}</a></strong></td>
-                    <td>{$object->msg_text}</td>
-                    <td>{$object->time}</td>
-                 </tr>                
-                 </tbody>";
-            }
-        }
-        $table.=" </table>";
-
-        echo $table;
 
     }
+
 
     public function message_thread_for_user(){
 
@@ -129,6 +81,58 @@ class User {
         echo $table;
 
     }
+
+    public function get_friends_for_user(){
+
+        $stmt = $this->database->conn->prepare("SELECT user2 as friend FROM friends WHERE user1= ? UNION SELECT user1 as friend FROM friends WHERE user2= ?");
+        $stmt->execute(array($this->username,$this->username));
+
+        $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+
+        $options = '';
+        while($row = $stmt->fetchAll()){
+            foreach ($row as $object){
+                $options .= "<option value='{$object->friend}'>{$object->friend}</option>";
+            }
+        }
+
+        echo $options;
+    }
+
+
+    public function add_new_message(){
+
+        try {
+
+        $stmt = $this->database->conn->prepare("INSERT into msg (sender, recipient, msg_text) VALUES (:sender,:recipient,:msg_text)");
+        $stmt->bindParam(':sender',$this->username);
+        $stmt->bindParam(':recipient',$this->friend);
+        $stmt->bindParam(':msg_text',$this->msg_text);
+
+        $stmt->execute();
+
+            echo "New message sent successfully";
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+    }
+
+
+    public function update_message_as_read($query_variable){
+
+        $stmt = $this->database->conn->prepare("UPDATE msg SET read_msg = '1' WHERE id = ?");
+
+        $stmt->execute(array($query_variable));
+    }
+
+    public function update_all_messages_as_read($query_variable){
+
+        $stmt = $this->database->conn->prepare("UPDATE msg SET read_msg = '1' WHERE sender = ?");
+
+        $stmt->execute(array($query_variable));
+    }
+
 
 
 
