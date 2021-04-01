@@ -9,7 +9,7 @@ class Database {
         try{
         $this->conn = new PDO("mysql:host=$host;dbname=$base",$user,$password);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully";
+//        echo "Connected successfully";
         } catch (PDOException $ex){
             echo "Connection failed: " . $ex->getMessage();
         }

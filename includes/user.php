@@ -25,10 +25,10 @@ class User {
     }
 
 
-    public function messages_for_current_user($query1,$query1_variable){
+    public function messages_for_current_user($query,$query_variable){
 
-        $stmt = $this->database->conn->prepare($query1);
-        $stmt->execute(array($query1_variable)); // this is recipient or sender, execute parameter must be an array
+        $stmt = $this->database->conn->prepare($query);
+        $stmt->execute(array($query_variable)); // this is recipient or sender, execute parameter must be an array
 
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
 
@@ -49,9 +49,9 @@ class User {
         $table = "<table class='table mt-5'>
                 <thead>
                 <tr>
-                    <th>Sender</th>
-                    <th>Message thread</th>
-                    <th>Time</th>
+                    <th class='text-center align-middle'>Sender</th>
+                    <th class='text-center align-middle'>Message thread</th>
+                    <th class='text-center align-middle'>Time</th>
                 </tr>
                 </thead>";
                 $i=0;
@@ -66,7 +66,7 @@ class User {
                  <tr class='{$class}'>
                     <td>{$object->sender}</td>
                     <td>{$object->msg_text}</td>
-                    <td>{$object->time}</td>
+                    <td class='text-center align-middle'>{$object->time}</td>
                  </tr>                
                  </tbody>";
                 $i++;
@@ -126,14 +126,28 @@ class User {
         $stmt->execute(array($query_variable));
     }
 
+
     public function update_all_messages_as_read($query_variable){
 
-        $stmt = $this->database->conn->prepare("UPDATE msg SET read_msg = '1' WHERE sender = ?");
+        $stmt = $this->database->conn->prepare("UPDATE msg SET read_msg = '1' WHERE sender = ? and recipient = ?");
 
-        $stmt->execute(array($query_variable));
+        $stmt->execute(array($query_variable,$this->username));
     }
 
 
+    public function get_all_messages_for_current_user($query,$query_variable,$query_variable2){
+
+        $stmt = $this->database->conn->prepare($query);
+        $stmt->execute(array($query_variable,$query_variable2)); // this is recipient or sender, execute parameter must be an array
+
+        $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+
+        $row = $stmt->fetchAll();
+
+        return $row;
+
+
+    }
 
 
 

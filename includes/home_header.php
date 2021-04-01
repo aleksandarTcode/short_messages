@@ -33,7 +33,27 @@
                     <a href="sent.php" class="nav-link">Sent</a>
                 </li>
                 <li class="nav-item">
-                    <p class="nav-link mb-0"><i class="fas fa-user"></i> Welcome <?php echo $_SESSION['username']; ?></p>
+                    <a href="search.php" class="nav-link">Search</a>
+                </li>
+                <li>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown mr-3">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                <i class="fas fa-user"></i>  Welcome <?php echo $_SESSION['username']; ?>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-user-times"></i> Logout
+                                </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-user-circle"></i> Profile
+                                </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-cog"></i> Settings
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -46,5 +66,3 @@
         <div class="home-inner container">
             <div class="row">
                 <div class="col-lg-8 offset-md-2">
-                    <h1 class="display-4 text-center">Messages
-                    </h1>
