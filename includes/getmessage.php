@@ -16,8 +16,8 @@ $hint = "";
 if ($q !== "") {
     $q = strtolower($q);
     $len=strlen($q);
-    foreach($result_array as $msg) {
 
+    foreach($result_array as $msg) {
 
         $msg_text = strtolower($msg->msg_text);
         $msg_text = html_entity_decode($msg_text);

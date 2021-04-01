@@ -1,16 +1,14 @@
 <?php
-require_once("includes/config.php");
+require_once("includes/init.php");
 
-$_SESSION['username'] = "";
+$_SESSION['username'] = $_SESSION['password'] = "";
+
+$user = new User($database);
+
 
 if(isset($_POST['login'])){
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $_SESSION['username'] = $username;
-
-    header("Location: home.php");
-
+    $user->login_user();
 
 }
 

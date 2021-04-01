@@ -1,9 +1,10 @@
 <?php
-
+include_once("functions.php");
 class User {
 
     public $database;
-    public $username;
+    public $username = "";
+    public $password = "";
     public $friend = "";
     public $msg_text = "";
 
@@ -13,17 +14,48 @@ class User {
     }
 
     public function set_username($username){
-        $this->username=$username;
+        $this->username = $username;
+    }
+
+    public function set_password($password){
+        $this->password = $password;
     }
 
     public function set_friend($friend){
-        $this->friend=$friend;
+        $this->friend = $friend;
     }
 
     public function set_msg_text($msg_text){
-        $this->msg_text=$msg_text;
+        $this->msg_text = $msg_text;
     }
 
+    public function login_user(){
+
+        $this->set_username($_POST['username']);
+        $this->set_password($_POST['password']);
+
+        $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute(array($this->username));
+
+        $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+
+        $row = $stmt->fetchAll();
+
+        if ($stmt->rowCount() !== 0){
+            if($row[0]->username == $this->username && $row[0]->password == $this->password){
+                $_SESSION['username'] = $this->username;
+                header("Location: home.php");
+            }
+            else {
+                set_message("Your Password is wrong!");
+                header("Location: index.php");
+            }
+        } else {
+            set_message("Your Username or Password is wrong!");
+            header("Location: index.php");
+        }
+
+    }
 
     public function messages_for_current_user($query,$query_variable){
 
@@ -148,6 +180,9 @@ class User {
 
 
     }
+
+
+
 
 
 

@@ -10,8 +10,9 @@
                     <input type="text" class="form-control form-control-lg" name="username" placeholder="Username">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Email">
+                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Password">
                 </div>
+                <p class="error text-center"><?php echo display_message();?></p>
                 <input type="submit" value="Login" name="login" class="btn btn-outline-light btn-block">
             </form>
         </div>

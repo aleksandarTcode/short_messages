@@ -1,4 +1,5 @@
 <?php require_once("includes/init.php"); ?>
+<?php if(!isset($_SESSION['username'])) header("Location: index.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +18,7 @@
 <body data-spy="scroll" data-target="#main-nav" id="home">
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" id="main-nav">
     <div class="container">
-        <a href="index.php" class="navbar-brand">MsgNow</a>
+        <a href="<?php echo isset($_SESSION['username'])?'home.php':'index.php' ?>" class="navbar-brand">MsgNow</a>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -42,7 +43,7 @@
                                 <i class="fas fa-user"></i>  Welcome <?php echo $_SESSION['username']; ?>
                             </a>
                             <div class="dropdown-menu">
-                                <a href="#" class="dropdown-item">
+                                <a href="logout.php" class="dropdown-item" onClick="return confirm('Are you sure you want to logout?')">
                                     <i class="fas fa-user-times"></i> Logout
                                 </a>
                                 <a href="#" class="dropdown-item">
