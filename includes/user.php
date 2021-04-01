@@ -3,14 +3,15 @@ include_once("functions.php");
 class User {
 
     public $database;
-    public $username = "";
-    public $password = "";
+    public $username;
+    public $password;
     public $friend = "";
     public $msg_text = "";
 
     public function __construct($data_base)
     {
         $this->database = $data_base;
+        $this->username = $_SESSION['username'];
     }
 
     public function set_username($username){

@@ -8,7 +8,7 @@
 //print_r($_SESSION);
 
 $user = new User($database);
-$user->set_username($_SESSION['username']);
+//$user->set_username($_SESSION['username']);
 
 
 ?>
