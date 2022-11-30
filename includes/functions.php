@@ -46,4 +46,32 @@ function display_message(){
     }
 }
 
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+function text_input_field_check($data,$regex_pattern,$message){
+
+    if (empty($_POST[$data])) {
+        global ${$data.'Err'}; // makes name for error variable, ex. if $input is first_name, it is first_nameErr
+        ${$data.'Err'} = "Field is required";
+        ${$data.'C'} = 0;
+    }  // check regular expression for input
+    elseif (!preg_match($regex_pattern, $_POST[$data])) {
+        global ${$data.'Err'};
+        ${$data.'Err'} = $message;
+        ${$data.'C'} = 0;
+        $_SESSION[$data] = $_POST[$data]; // makes session for form output when input is wrong
+    }
+    else {
+        global $$data; // // makes name for variable
+        $$data = test_input($_POST[$data]);
+        $_SESSION[$data] = $$data;
+    }
+}
+
+
 ?>

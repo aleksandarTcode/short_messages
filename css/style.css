@@ -48,3 +48,10 @@ body {
   padding: 5px;
   border-radius: 5px;
 }
+
+.error {color: #FF0000;}
+
+#alert1 {
+  display: inline-block;
+}
+
