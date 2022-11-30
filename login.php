@@ -1,7 +1,6 @@
 <?php
 require_once("includes/init.php");
 
-$_SESSION['username'] = $_SESSION['password'] = "";
 
 $user = new User($database);
 

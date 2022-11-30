@@ -49,6 +49,7 @@
                 <?php
                     include("index_text.php");
                     include ("login_form.php");
+                    session_unset(); // clear login input fields after refresh login page
                  ?>
 
             </div>

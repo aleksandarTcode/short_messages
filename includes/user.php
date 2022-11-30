@@ -12,6 +12,8 @@ class User {
     public $mail;
     public $usernameErr;
     public $emailErr;
+    public $role;
+    public $role_session;
 
 
     public function __construct($data_base)
@@ -104,31 +106,46 @@ class User {
 
     public function login_user(){
 
-        $this->set_username($_POST['username']);
-        $this->set_password($_POST['password']);
+        $this->username = test_input($_POST['username']);
+        $this->password = test_input($_POST['password']);
 
+        try{
         $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute(array($this->username));
 
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $row = $stmt->fetch();
 
-        $row = $stmt->fetchAll();
-
-        if ($stmt->rowCount() !== 0){
-            if($row[0]->username == $this->username && $row[0]->password == $this->password){
-                $_SESSION['username'] = $this->username;
-                header("Location: home.php");
-            }
-            else {
-                set_message("Your Password is wrong!");
+            if($stmt->rowCount()!==0){
+                $this->role = $row->role;
+                $this->role_session = $_SESSION['role'] = $row->role;
+                if($row->username == $this->username && password_verify($this->password,$row->password ) && $this->role == 'user'){
+                    $_SESSION['username'] = $this->username;
+                    $_SESSION['first_name'] = $row->first_name;
+                    $_SESSION['last_name'] = $row->last_name;
+                    header("Location: home.php");
+                }else if($row->username == $this->username && password_verify($this->password,$row->password ) && $this->role == 'admin'){
+                    $_SESSION['username'] = $this->username;
+                    header("Location: admin.php");
+                }
+                else{
+                    set_message("Your Password is wrong!");
+                    $_SESSION['username_temp'] = $_POST['username'];
+                    $_SESSION['password_temp'] = $_POST['password'];
+                    header("Location: index.php");
+                }
+            }else {
+                set_message("Your Username or Password is wrong!");
+                $_SESSION['username_temp'] = $_POST['username'];
+                $_SESSION['password_temp'] = $_POST['password'];
                 header("Location: index.php");
             }
-        } else {
-            set_message("Your Username or Password is wrong!");
-            header("Location: index.php");
+
+        }catch(PDOException $e){
+            echo "Error: ". $e->getMessage();
         }
 
-    }
+    } // end login_user
 
     public function messages_for_current_user($query,$query_variable){
 
