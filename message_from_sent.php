@@ -13,7 +13,7 @@ $user = new User($database); //$database is instance of Database class
 $message_id = $_GET['id'];
 
 
-$result_array = $user->messages_for_current_user('SELECT id,recipient,msg_text,time,read_msg FROM msg WHERE id = ? ORDER BY time DESC',$message_id);
+$result_array = $user->messages_for_current_user_with_pagination('SELECT id,recipient,msg_text,time,read_msg FROM msg WHERE id = ? ORDER BY time DESC',$message_id);
 
 
 ?>

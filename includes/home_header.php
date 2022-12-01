@@ -46,7 +46,7 @@
                                 <a href="logout.php" class="dropdown-item" onClick="return confirm('Are you sure you want to logout?')">
                                     <i class="fas fa-user-times"></i> Logout
                                 </a>
-                                <a href="#" class="dropdown-item">
+                                <a href="profile.php" class="dropdown-item">
                                     <i class="fas fa-user-circle"></i> Profile
                                 </a>
                                 <a href="#" class="dropdown-item">

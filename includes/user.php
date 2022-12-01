@@ -110,11 +110,11 @@ class User {
         $this->password = test_input($_POST['password']);
 
         try{
-        $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute(array($this->username));
+            $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->execute(array($this->username));
 
-        $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
-        $row = $stmt->fetch();
+            $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $row = $stmt->fetch();
 
             if($stmt->rowCount()!==0){
                 $this->role = $row->role;
@@ -147,16 +147,119 @@ class User {
 
     } // end login_user
 
-    public function messages_for_current_user($query,$query_variable){
+    public function messages_for_current_user_with_pagination($query,$query_variable){
+
+
 
         $stmt = $this->database->conn->prepare($query);
         $stmt->execute(array($query_variable)); // this is recipient or sender, execute parameter must be an array
-
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
-
         $row = $stmt->fetchAll();
 
-        return $row;
+        $total_entries = count($row);
+        $perPage = 2;
+
+        //set page in url to 1 if it is set to non number
+        if (isset($_GET['page'])) {
+            $page = preg_replace('/[^0-9]/', '', $_GET['page']);
+        } else {
+            $page = 1;
+        }
+
+        if($total_entries!==0) {
+
+            $lastPage = ceil($total_entries / $perPage);
+
+            // if someone is changing page in url manually
+            if ($page < 1) {
+                $page = 1;
+            } elseif ($page > $lastPage) {
+                $page = $lastPage;
+            }
+
+            $middleNumbers = '';
+            $sub1 = $page - 1;
+            $sub2 = $page - 2;
+            $add1 = $page + 1;
+            $add2 = $page + 2;
+
+            if ($page == 1) {
+                $middleNumbers .= '<li class="page-item active"><a class="page-link">' . $page . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $add1 . '">' . $add1 . '</a></li>';
+
+            } elseif ($page == $lastPage) {
+
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $sub1 . '">' . $sub1 . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item active"><a class="page-link">' . $page . '</a></li>';
+
+            } elseif ($page > 2 && $page < ($lastPage - 1)) {
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $sub2 . '">' . $sub2 . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $sub1 . '">' . $sub1 . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item active"><a class="page-link">' . $page . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $add1 . '">' . $add1 . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $add2 . '">' . $add2 . '</a></li>';
+
+            } elseif ($page > 1 && $page < $lastPage) {
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $sub1 . '">' . $sub1 . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item active"><a class="page-link">' . $page . '</a></li>';
+
+                $middleNumbers .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $add1 . '">' . $add1 . '</a></li>';
+
+            }
+
+            $outputPagination = '';
+
+            if ($page != 1) {
+                $prev = $page - 1;
+                $outputPagination .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $prev . '">Back</a></li>';
+            }
+
+            $outputPagination .= $middleNumbers;
+
+
+            if ($page != $lastPage) {
+                $next = $page + 1;
+                $outputPagination .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $next . '">Next</a></li>';
+            }
+
+
+            // echo pagination only for sent.php and inbox.php and not for message_from_inbox.php and message_from_sent.php
+            if(strpos(basename($_SERVER['REQUEST_URI']),'from') == false){
+                echo "<div class='text-center' style='clear: both'><ul class='pagination'>{$outputPagination}</ul></div>";
+            }
+
+
+            $limit = 'LIMIT ' . ($page - 1) * $perPage . ',' . $perPage;
+
+            try{
+
+                $stmt2 = $this->database->conn->prepare($query .' '. $limit);
+                $stmt2->execute(array($query_variable));
+                $result2 = $stmt2->setFetchMode(PDO::FETCH_OBJ);
+                $row = $stmt2->fetchAll();
+                return $row;
+
+
+            }catch (PDOException $e) {
+                echo "Error: " . $e->getMessage();
+
+            }
+
+
+
+
+
+
+        }//end if $total_entries exist check
+
+//        return $row;
 
 
     }
@@ -175,7 +278,7 @@ class User {
                     <th class='text-center align-middle'>Time</th>
                 </tr>
                 </thead>";
-                $i=0;
+        $i=0;
         while($row = $stmt->fetchAll()){
             foreach ($row as $object){
 
@@ -224,12 +327,12 @@ class User {
 
         try {
 
-        $stmt = $this->database->conn->prepare("INSERT into msg (sender, recipient, msg_text) VALUES (:sender,:recipient,:msg_text)");
-        $stmt->bindParam(':sender',$this->username);
-        $stmt->bindParam(':recipient',$this->friend);
-        $stmt->bindParam(':msg_text',$this->msg_text);
+            $stmt = $this->database->conn->prepare("INSERT into msg (sender, recipient, msg_text) VALUES (:sender,:recipient,:msg_text)");
+            $stmt->bindParam(':sender',$this->username);
+            $stmt->bindParam(':recipient',$this->friend);
+            $stmt->bindParam(':msg_text',$this->msg_text);
 
-        $stmt->execute();
+            $stmt->execute();
 
             echo "New message sent successfully";
         } catch(PDOException $e) {

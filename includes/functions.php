@@ -29,7 +29,6 @@ function time_elapsed_string($datetime, $full = false) {
     return $string ? implode(', ', $string) . ' ago' : 'just now';
 }
 
-
 function set_message($msg){
     if(!empty($msg)){
         $_SESSION['message'] = $msg;
@@ -37,7 +36,6 @@ function set_message($msg){
         $msg = "";
     }
 }
-
 
 function display_message(){
     if(isset ($_SESSION['message'])){
@@ -72,6 +70,8 @@ function text_input_field_check($data,$regex_pattern,$message){
         $_SESSION[$data] = $$data;
     }
 }
+
+
 
 
 ?>

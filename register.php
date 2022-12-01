@@ -1,6 +1,7 @@
 <?php
 require_once ("includes/register_header.php");
-//if(isset($_SESSION['username'])){header("Location: login.php");}
+
+if(isset($_SESSION['username'])){header("Location: index.php");}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
