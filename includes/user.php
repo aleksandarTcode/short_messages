@@ -254,9 +254,6 @@ class User {
 
 
 
-
-
-
         }//end if $total_entries exist check
 
 //        return $row;

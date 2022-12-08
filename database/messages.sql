@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 02, 2021 at 06:23 AM
+-- Generation Time: Dec 08, 2022 at 08:20 AM
 -- Server version: 5.7.24
--- PHP Version: 7.3.1
+-- PHP Version: 7.4.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -71,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `msg` (
   PRIMARY KEY (`id`),
   KEY `sender` (`sender`),
   KEY `recipient` (`recipient`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `msg`
@@ -87,15 +86,18 @@ INSERT INTO `msg` (`id`, `sender`, `recipient`, `msg_text`, `time`, `sent_msg`, 
 (9, 'susie', 'aco', 'Its a deal', '2021-03-23 08:59:00', 1, 1),
 (10, 'susie', 'aco', 'No problem', '2021-03-29 09:55:35', 1, 1),
 (11, 'susie', 'aco', 'tomorrow ', '2021-03-29 11:24:49', 1, 1),
-(12, 'aco', 'susie', '<p>see you then</p>\r\n', '2021-03-30 08:32:16', 1, 0),
+(12, 'aco', 'susie', '<p>see you then</p>\r\n', '2021-03-30 08:32:16', 1, 1),
 (13, 'aco', 'susie', '<p>are&nbsp;<strong>you already&nbsp;<em>here?</em></strong></p>\r\n', '2021-03-30 08:33:53', 1, 0),
 (14, 'aco', 'susie', '<p>im here</p>\r\n', '2021-03-30 08:42:16', 1, 0),
 (15, 'susie', 'aco', '<p>coming in two minutes</p>\r\n', '2021-03-30 08:43:12', 1, 1),
-(16, 'aco', 'susie', '<p>waiting&nbsp;</p>\r\n', '2021-03-30 09:14:28', 1, 0),
+(16, 'aco', 'susie', '<p>waiting&nbsp;</p>\r\n', '2021-03-30 09:14:28', 1, 1),
 (17, 'aco', 'dave', '<p>hey man, whats up</p>\r\n', '2021-03-30 09:21:55', 1, 1),
 (18, 'dave', 'aco', '<p>hey im great, you</p>', '2021-03-30 09:22:51', 1, 1),
 (19, 'joe', 'dave', '<p>who is that</p>\r\n', '2021-03-30 10:35:46', 1, 1),
-(20, 'aco', 'dave', '<p>next week</p>\r\n', '2021-04-01 10:35:32', 0, 1);
+(20, 'aco', 'dave', '<p>next week</p>\r\n', '2021-04-01 10:35:32', 0, 1),
+(21, 'aco', 'dave', '<p>heyyy</p>\r\n', '2022-10-05 08:02:47', 0, 0),
+(22, 'aco', 'susie', '<p>hey</p>\r\n', '2022-11-22 10:18:02', 0, 0),
+(23, 'dave', 'aco', '<p>how are you?</p>\r\n', '2022-11-22 10:19:10', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -110,23 +112,25 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `first_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `last_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `phone_1` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `phone_2` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `role` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `phone_1`, `phone_2`) VALUES
-(1, 'aco', 'aco123', 'Aleksandar', 'Trmcic', '0643214321', ''),
-(2, 'miki', 'miki123', 'Mike', 'Michelson', '0641234567', '069345678'),
-(3, 'jane', 'jane123', 'Jane', 'Johnson', '0601112333', '0612223444'),
-(4, 'joe', 'joe123', 'John', 'Doe', '063223344', ''),
-(5, 'dave', 'dave123', 'Dave', 'Davidson', '0652002000', ''),
-(6, 'susie', 'susie123', 'Susan', 'Richardson', '063333444', '');
+INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `role`) VALUES
+(1, 'aco', '$2y$10$.7O4cVaml.PB.Qck.N5L/uiaCDEPEwBAlTlI/DzyP2Vfm0g8HJGRS', 'Aleksandar', 'Trmcic', 'aleksandar.trmciccc@gmail.com', '0643214321', 'user'),
+(2, 'miki', '$2y$10$R9g7slwytF3S9CmDzXUbQO3shiQWA1cDOtkDGi/cqDPJwDXbEmHhe', 'Mike', 'Michelson', '', '0641234567', 'user'),
+(3, 'jane', '$2y$10$PXK4X4NWzaF.IviA3mJp..jcsqRGDgkZq.1HOuTby7c0lySvBFYP6', 'Jane', 'Johnson', '', '0601112333', 'user'),
+(4, 'joe', '$2y$10$b1pJuAFyuVm.vF.SlAHYVejSJIFqcHiSjDt1WrCY85ZgEljbpDDLC', 'John', 'Doe', '', '063223344', 'user'),
+(5, 'dave', '$2y$10$utaxJwhP8K6pFsFSqJPsfu/GwvNea8fjpER0PU1vAXX17dukmOHgy', 'Dave', 'Davidson', '', '0652002000', 'user'),
+(6, 'susie', '$2y$10$yo3P6r40iMQ6kRyF.EF1PO36e6iIH/8VdCQkvVXonTYU3lVqSkBNq', 'Susan', 'Richardson', '', '063333444', 'user'),
+(8, 'aleksandar', '$2y$10$YK94HsTAjFvEc71xz5cwEeuf/iNtxNshYoJE9fNpyjxTNQZAEH3x2', 'Aleksandar', 'Trmcic', 'aleksandar.trmcic@gmail.com', '123456789', 'admin');
 
 --
 -- Constraints for dumped tables
