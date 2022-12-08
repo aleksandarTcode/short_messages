@@ -8,7 +8,7 @@
             <i class="fas fa-check fa-2x"></i>
         </div>
         <div class="p-4 align-self-end">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed, tempore iusto in minima facere dolorem!
+            Stay connected with the people you love!
         </div>
     </div>
 
@@ -17,7 +17,7 @@
             <i class="fas fa-check fa-2x"></i>
         </div>
         <div class="p-4 align-self-end">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed, tempore iusto in minima facere dolorem!
+            Never miss a message with MsgNow
         </div>
     </div>
 
@@ -26,7 +26,7 @@
             <i class="fas fa-check fa-2x"></i>
         </div>
         <div class="p-4 align-self-end">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed, tempore iusto in minima facere dolorem!
+            Chatting made simple and fun!
         </div>
     </div>
 </div>

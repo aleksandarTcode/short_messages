@@ -1,6 +1,7 @@
 {
     "require": {
         "twig/twig": "1.13.*",
-        "phpmailer/phpmailer": "^6.6"
+        "phpmailer/phpmailer": "^6.6",
+        "google/apiclient": "^2.0"
     }
 }
