@@ -10,8 +10,8 @@ class User {
     public $friend = "";
     public $msg_text = "";
     public $mail;
-    public $usernameErr;
-    public $emailErr;
+    public $usernameErr="";
+    public $emailErr="";
     public $role;
     public $role_session;
 

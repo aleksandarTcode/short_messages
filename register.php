@@ -1,7 +1,7 @@
 <?php
 require_once ("includes/register_header.php");
 
-if(isset($_SESSION['username'])){header("Location: index.php");}
+//if(isset($_SESSION['username'])){header("Location: index.php");}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -77,13 +77,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $usernameErr = $user->usernameErr;//print error message if username is taken
         $emailErr = $user->emailErr;//print error message if email is taken
 
-        header("Location: thanks.php");
+        if($usernameErr=='' && $emailErr==''){
+            header("Location: thanks.php");
+        }
+
 
     }
 
 } //end if
 
 //print_r($_SESSION);
+//var_dump($usernameErr);
+//var_dump($emailErr);
 
 ?>
 
