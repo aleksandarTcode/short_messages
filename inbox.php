@@ -44,6 +44,7 @@ $user = new User($database); //$database is instance of Database class
         <?php
         } //end foreach
 
+
         ?>
     </tr>
     </tbody>

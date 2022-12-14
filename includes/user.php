@@ -170,6 +170,7 @@ class User {
 
             $lastPage = ceil($total_entries / $perPage);
 
+
             // if someone is changing page in url manually
             if ($page < 1) {
                 $page = 1;
@@ -214,6 +215,8 @@ class User {
 
             }
 
+
+
             $outputPagination = '';
 
             if ($page != 1) {
@@ -227,6 +230,11 @@ class User {
             if ($page != $lastPage) {
                 $next = $page + 1;
                 $outputPagination .= '<li class="page-item"><a class="page-link" href="' . $_SERVER['PHP_SELF'] . '?page=' . $next . '">Next</a></li>';
+            }
+
+            //don't show pagination if there is only one page
+            if($page == 1 && $lastPage ==1){
+                $outputPagination = '';
             }
 
 
