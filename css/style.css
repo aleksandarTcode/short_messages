@@ -3,6 +3,14 @@ body {
   color: #fff;
 }
 
+#profile{
+  color: black;
+}
+
+.mt-6 {
+  margin-top: 5rem;
+}
+
 .navbar {
   border-bottom: #008ed6 3px solid;
   opacity: 0.8;

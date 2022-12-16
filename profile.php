@@ -1,350 +1,246 @@
-<?php require_once("includes/init.php"); ?>
-<?php if(!isset($_SESSION['username'])) header("Location: index.php"); ?>
-<!DOCTYPE html>
-<html lang="en">
+<?php include("includes/profile_header.php") ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
-          crossorigin="anonymous">
+<?php
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <title>MsgNow</title>
-</head>
+$first_name_updateErr = $last_name_updateErr = $username_updateErr = $email_updateErr =  $new_passwordErr = $confirm_passwordErr = $current_passwordErr = "";
+$first_name_update = $last_name_update = $username_update = $email_update = $new_password = $confirm_password = $current_password = "";
 
-<body data-spy="scroll" data-target="#main-nav" id="home">
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" id="main-nav">
-    <div class="container">
-        <a href="<?php echo isset($_SESSION['username'])?'home.php':'index.php' ?>" class="navbar-brand">MsgNow</a>
-        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a href="home.php" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="inbox.php" class="nav-link">Inbox</a>
-                </li>
-                <li class="nav-item">
-                    <a href="sent.php" class="nav-link">Sent</a>
-                </li>
-                <li class="nav-item">
-                    <a href="search.php" class="nav-link">Search</a>
-                </li>
-                <li>
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown mr-3">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                <i class="fas fa-user"></i>  Welcome <?php echo $_SESSION['username']; ?>
-                            </a>
-                            <div class="dropdown-menu">
-                                <a href="logout.php" class="dropdown-item" onClick="return confirm('Are you sure you want to logout?')">
-                                    <i class="fas fa-user-times"></i> Logout
-                                </a>
-                                <a href="profile.php" class="dropdown-item">
-                                    <i class="fas fa-user-circle"></i> Profile
-                                </a>
-                                <a href="#" class="dropdown-item">
-                                    <i class="fas fa-cog"></i> Settings
-                                </a>
+$_SESSION['first_name_update'] = $_SESSION['last_name_update'] = $_SESSION['username_update'] = $_SESSION['email_update'] = $_SESSION['new_password'] = $_SESSION['confirm_password'] = $_SESSION['hashed_password'] = $_SESSION['current_password'] = "" ;
+
+
+$user = new User($database);
+$row = $user->get_user();
+
+
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    // First and last name check and set
+    $text_input_field_check_regEx = "/^[a-zA-Z-' ]*$/";
+    $text_input_field_check_msg = "Only letters and white space allowed";
+    text_input_field_check('first_name_update',$text_input_field_check_regEx,$text_input_field_check_msg);
+    text_input_field_check('last_name_update',$text_input_field_check_regEx,$text_input_field_check_msg);
+
+    // Username check and set
+    $username_regEx = "/^[a-zA-Z0-9]*$/";
+    $username_msg = "Only letters and numbers allowed";
+    text_input_field_check('username_update',$username_regEx,$username_msg);
+
+
+    // Email check and set
+    if (empty($_POST["email_update"])) {
+        $email_updateErr = "Email is required";
+    }
+    // Check if e-mail address is well-formed
+    elseif (!filter_var(test_input($_POST["email_update"]), FILTER_VALIDATE_EMAIL)) {
+        $email_updateErr = "Invalid email format";
+        $_SESSION['email_update'] = $_POST["email_update"];
+    }
+    else {
+        $email_update = test_input($_POST["email_update"]);
+        $_SESSION['email_update'] = $email_update;
+    }
+
+
+    if($first_name_update && $last_name_update && $username_update && $email_update ){
+
+        $_SESSION['current_password'] = $_POST['current_password'];
+        echo "radi ovo sad sve";
+
+        if(password_verify(test_input($_POST['current_password']),$_SESSION['password_from_database'])){
+
+            // Password check and set
+            $password_regEx = "/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,20}$/";
+            $password_msg = "Password must contain 8-20 characters of at least one lowercase, uppercase, number and special character. Allowed characters are letters, numbers and special characters @#-_$%^&+=§!?";
+            text_input_field_check('new_password',$password_regEx,$password_msg);
+
+            // Check is confirmed password the same
+            if (empty($_POST["confirm_password"])) {
+                $confirm_passwordErr = "Please confirm password";
+            } elseif (strcmp($new_password,$_POST["confirm_password"])!==0){
+                $confirm_passwordErr = "Password is not confirmed, enter the same password!";
+                $_SESSION['confirm_password'] = $_POST["confirm_password"];
+            }else {
+                $confirm_password = test_input($_POST["confirm_password"]);
+                $_SESSION['confirm_password'] = $confirm_password;
+                $hashed_password = password_hash($confirm_password, PASSWORD_DEFAULT);
+                $_SESSION['hashed_password'] = $hashed_password;
+
+                $user = new User($database);
+                $user->update_user();
+                header("Location: profile.php");
+
+            }
+
+        }else {
+            $current_passwordErr = "That is not current password, please try again or leave this field empty!";
+        }
+
+//        $user = new User($database);
+
+//        $user->mail = $mail;//set mail property in User class to Phpmailer instance
+//        $user->add_user();
+//        $username_updateErr = $user->usernameErr;//print error message if username is taken
+//        $email_updateErr = $user->emailErr;//print error message if email is taken
+//
+//        if($username_updateErr=='' && $email_updateErr==''){
+//            header("Location: profile.php");
+//        }
+
+
+    }
+
+
+} //end if
+
+print_r($_SESSION);
+print_r($_POST);
+?>
+
+
+
+<div class="container mt-6" id="profile">
+    <div class="row flex-lg-nowrap">
+
+        <div class="col">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="e-profile">
+                                <div class="row">
+                                    <div class="col-12 col-sm-auto mb-3">
+                                        <div class="mx-auto" style="width: 140px;">
+                                            <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
+                                                <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                        <div class="text-center text-sm-left mb-2 mb-sm-0">
+                                            <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap"><?php echo $row->first_name." ".$row->last_name;?></h4>
+                                            <p class="mb-0">@<?php echo $row->username;?></p>
+                                            <div class="text-muted"><small>Registered: <?php echo time_elapsed_string($row->time_registered);?></small></div>
+                                            <div class="mt-2">
+                                                <button class="btn btn-primary" type="button">
+                                                    <i class="fa fa-fw fa-camera"></i>
+                                                    <span>Change Photo</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="text-center text-sm-right">
+                                            <span class="badge badge-secondary"><?php echo "Role: ".$row->role;?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item"><a href="" class="active nav-link">Settings</a></li>
+                                </ul>
+                                <div class="tab-content pt-3">
+                                    <div class="tab-pane active">
+                                        <form class="form" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" onclick="yes">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="first_name">First Name</label>
+                                                                <input type="text" class="form-control" name="first_name_update" placeholder="Enter First Name" maxlength="30" value="<?php if(!empty($_SESSION['first_name_update'])){echo $_SESSION['first_name_update'];}else echo $_SESSION['first_name'];?>"><span class="error"><?php echo $first_name_updateErr;?></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="last_name">Last Name</label>
+                                                                <input type="text" class="form-control" name="last_name_update" placeholder="Enter Last Name" maxlength="30" value="<?php if(!empty($_SESSION['last_name_update'])){echo $_SESSION['last_name_update'];}else echo $_SESSION['last_name'];?>"><span class="error"><?php echo $last_name_updateErr;?></span>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="user">Username</label>
+                                                                <input class="form-control" name="username_update" type="text" id="username_update" placeholder="Enter Username" maxlength="30" value="<?php if(!empty($_SESSION['username_update'])){echo $_SESSION['username_update'];}else echo $_SESSION['username'];?>"><span class="error"><?php echo $username_updateErr;?></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="email">Email</label>
+                                                                <input class="form-control" name="email_update" type="text" id="email_update" placeholder="Enter Email" maxlength="30" value="<?php if(!empty($_SESSION['email_update'])){echo $_SESSION['email_update'];}else echo $_SESSION['email'];?>"><span class="error"><?php echo $email_updateErr;?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6 col-sm-6 mb-3">
+                                                    <div class="mb-2"><b>Change Password</b></div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label for="current_password">Current Password</label>
+                                                                <input class="form-control" name="current_password" type="password" id="current_password" placeholder="••••••" maxlength="30" value="<?php echo $_SESSION['current_password']; ?>"><span class="error"><?php echo $current_passwordErr;?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label for="new_password">New Password</label>
+                                                                <input class="form-control" name="new_password" type="password" id="new_password" placeholder="••••••" maxlength="30" value="<?php echo $_SESSION['new_password']; ?>"><span class="error"><?php echo $new_passwordErr;?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                        <div class="form-group">
+                                                            <label for="confirm_password"> Password</span></label>
+                                                            <input class="form-control" name="confirm_password" type="password" placeholder="••••••" id="password2" maxlength="30" value="<?php echo $_SESSION['confirm_password']; ?>"><span class="error"><?php echo $confirm_passwordErr;?></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                                <div class="col-md-3 mt-4">
+                                                    <button class="btn btn-block btn-primary" type="submit" >Save Changes</button>
+                                                </div>
+
+
+                                                        <div class="col-md-3 mt-4">
+                                                                <a href="logout.php" class="btn btn-block btn-secondary" role="button" onClick="return confirm('Are you sure you want to logout?')">Logout</a>
+                                                        </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
                             </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
         </div>
     </div>
-</nav>
+</div>
 
 
 
 
 
 
-<head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
 
 
-<hr>
-<div class="container bootstrap snippet">
-    <div class="row">
-        <div class="col-sm-10"><h1>User name</h1></div>
-        <div class="col-sm-2"><a href="/users" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="http://www.gravatar.com/avatar/28fd20ccec6865e2d5f0e1f4446eb7bf?s=100"></a></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3"><!--left col-->
+<?php include ("includes/home_footer.php");?>
 
 
-            <div class="text-center">
-                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
-                <h6>Upload a different photo...</h6>
-                <input type="file" class="text-center center-block file-upload">
-            </div></hr><br>
 
 
-            <div class="panel panel-default">
-                <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
-                <div class="panel-body"><a href="http://bootnipets.com">bootnipets.com</a></div>
-            </div>
 
-
-            <ul class="list-group">
-                <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
-            </ul>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">Social Media</div>
-                <div class="panel-body">
-                    <i class="fa fa-facebook fa-2x"></i> <i class="fa fa-github fa-2x"></i> <i class="fa fa-twitter fa-2x"></i> <i class="fa fa-pinterest fa-2x"></i> <i class="fa fa-google-plus fa-2x"></i>
-                </div>
-            </div>
-
-        </div><!--/col-3-->
-        <div class="col-sm-9">
-            <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-                <li><a data-toggle="tab" href="#messages">Menu 1</a></li>
-                <li><a data-toggle="tab" href="#settings">Menu 2</a></li>
-            </ul>
-
-
-            <div class="tab-content">
-                <div class="tab-pane active" id="home">
-                    <hr>
-                    <form class="form" action="##" method="post" id="registrationForm">
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="first_name"><h4>First name</h4></label>
-                                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="last_name"><h4>Last name</h4></label>
-                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="phone"><h4>Phone</h4></label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="mobile"><h4>Mobile</h4></label>
-                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="email"><h4>Email</h4></label>
-                                <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="email"><h4>Location</h4></label>
-                                <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="password"><h4>Password</h4></label>
-                                <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="password2"><h4>Verify</h4></label>
-                                <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-12">
-                                <br>
-                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                            </div>
-                        </div>
-                    </form>
-
-                    <hr>
-
-                </div><!--/tab-pane-->
-                <div class="tab-pane" id="messages">
-
-                    <h2></h2>
-
-                    <hr>
-                    <form class="form" action="##" method="post" id="registrationForm">
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="first_name"><h4>First name</h4></label>
-                                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="last_name"><h4>Last name</h4></label>
-                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="phone"><h4>Phone</h4></label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="mobile"><h4>Mobile</h4></label>
-                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="email"><h4>Email</h4></label>
-                                <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="email"><h4>Location</h4></label>
-                                <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="password"><h4>Password</h4></label>
-                                <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="password2"><h4>Verify</h4></label>
-                                <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-12">
-                                <br>
-                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                            </div>
-                        </div>
-                    </form>
-
-                </div><!--/tab-pane-->
-                <div class="tab-pane" id="settings">
-
-
-                    <hr>
-                    <form class="form" action="##" method="post" id="registrationForm">
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="first_name"><h4>First name</h4></label>
-                                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="last_name"><h4>Last name</h4></label>
-                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="phone"><h4>Phone</h4></label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="mobile"><h4>Mobile</h4></label>
-                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="email"><h4>Email</h4></label>
-                                <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="email"><h4>Location</h4></label>
-                                <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="password"><h4>Password</h4></label>
-                                <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div class="col-xs-6">
-                                <label for="password2"><h4>Verify</h4></label>
-                                <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-12">
-                                <br>
-                                <button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                                <!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-            </div><!--/tab-pane-->
-        </div><!--/tab-content-->
-
-    </div><!--/col-9-->
-</div><!--/row-->

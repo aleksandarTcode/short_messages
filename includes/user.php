@@ -16,6 +16,7 @@ class User {
     public $role_session;
 
 
+
     public function __construct($data_base)
     {
         $this->database = $data_base;
@@ -146,6 +147,53 @@ class User {
         }
 
     } // end login_user
+
+    public function get_user(){
+
+        try{
+            $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->execute(array($this->username));
+            $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $row = $stmt->fetch();
+//            print_r($row);
+            $_SESSION['first_name'] = $row->first_name;
+            $_SESSION['last_name'] = $row->last_name;
+            $_SESSION['email'] = $row->email;
+            $_SESSION['username'] = $row->username;
+            $_SESSION['password_from_database'] = $row->password;
+            return $row;
+
+
+
+        }catch (PDOException $e){
+            echo "Error: ". $e->getMessage();
+        }
+
+
+
+
+    } // end get_user
+
+    public function update_user(){
+        try{
+            $stmt = $this->database->conn->prepare("UPDATE users SET username=:username,first_name=:first_name,last_name=:last_name,email=:email,password=:password WHERE username=:current_username");
+            $stmt->bindParam(':username',$_SESSION['username_update']);
+            $stmt->bindParam(':first_name',$_SESSION['first_name_update']);
+            $stmt->bindParam(':last_name',$_SESSION['last_name_update']);
+            $stmt->bindParam(':email',$_SESSION['email_update']);
+            $stmt->bindParam(':password',$_SESSION['hashed_password']);
+            $stmt->bindParam(':current_username',$this->username);
+
+
+            $stmt->execute();
+        }
+
+        catch (PDOException $e){
+                echo "Error: ". $e->getMessage();
+            }
+
+
+    } // end update_user
 
     public function messages_for_current_user_with_pagination($query,$query_variable){
 

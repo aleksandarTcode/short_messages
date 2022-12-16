@@ -72,6 +72,4 @@ function text_input_field_check($data,$regex_pattern,$message){
 }
 
 
-
-
 ?>

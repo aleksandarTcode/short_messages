@@ -29,6 +29,7 @@ $user = new User($database); //$database is instance of Database class
     <tbody>
     <tr>
         <?php $row = $user->messages_for_current_user_with_pagination('SELECT id,sender,msg_text,time,read_msg FROM msg WHERE recipient = ? ORDER BY time DESC',$user->username);
+
         foreach($row as $msg){
             ?>
                 <tr>
@@ -43,6 +44,7 @@ $user = new User($database); //$database is instance of Database class
 
         <?php
         } //end foreach
+
 
 
         ?>

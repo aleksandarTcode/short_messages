@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
           crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+
     <title>MsgNow</title>
 </head>
 
@@ -49,9 +50,9 @@
                                 <a href="profile.php" class="dropdown-item">
                                     <i class="fas fa-user-circle"></i> Profile
                                 </a>
-<!--                                <a href="#" class="dropdown-item">-->
-<!--                                    <i class="fas fa-cog"></i> Settings-->
-<!--                                </a>-->
+                                <!--                                <a href="#" class="dropdown-item">-->
+                                <!--                                    <i class="fas fa-cog"></i> Settings-->
+                                <!--                                </a>-->
                             </div>
                         </li>
                     </ul>
@@ -61,9 +62,4 @@
     </div>
 </nav>
 
-<!-- HOME SECTION -->
-<header id="home-section">
-    <div class="dark-overlay">
-        <div class="home-inner container">
-            <div class="row">
-                <div class="col-lg-8 offset-md-2">
+<!--end header-->
