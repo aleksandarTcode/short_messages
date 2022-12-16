@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 08, 2022 at 08:20 AM
+-- Generation Time: Dec 16, 2022 at 02:16 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.12
 
@@ -115,22 +115,24 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `role` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user',
+  `time_registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `role`) VALUES
-(1, 'aco', '$2y$10$.7O4cVaml.PB.Qck.N5L/uiaCDEPEwBAlTlI/DzyP2Vfm0g8HJGRS', 'Aleksandar', 'Trmcic', 'aleksandar.trmciccc@gmail.com', '0643214321', 'user'),
-(2, 'miki', '$2y$10$R9g7slwytF3S9CmDzXUbQO3shiQWA1cDOtkDGi/cqDPJwDXbEmHhe', 'Mike', 'Michelson', '', '0641234567', 'user'),
-(3, 'jane', '$2y$10$PXK4X4NWzaF.IviA3mJp..jcsqRGDgkZq.1HOuTby7c0lySvBFYP6', 'Jane', 'Johnson', '', '0601112333', 'user'),
-(4, 'joe', '$2y$10$b1pJuAFyuVm.vF.SlAHYVejSJIFqcHiSjDt1WrCY85ZgEljbpDDLC', 'John', 'Doe', '', '063223344', 'user'),
-(5, 'dave', '$2y$10$utaxJwhP8K6pFsFSqJPsfu/GwvNea8fjpER0PU1vAXX17dukmOHgy', 'Dave', 'Davidson', '', '0652002000', 'user'),
-(6, 'susie', '$2y$10$yo3P6r40iMQ6kRyF.EF1PO36e6iIH/8VdCQkvVXonTYU3lVqSkBNq', 'Susan', 'Richardson', '', '063333444', 'user'),
-(8, 'aleksandar', '$2y$10$YK94HsTAjFvEc71xz5cwEeuf/iNtxNshYoJE9fNpyjxTNQZAEH3x2', 'Aleksandar', 'Trmcic', 'aleksandar.trmcic@gmail.com', '123456789', 'admin');
+INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `role`, `time_registered`) VALUES
+(1, 'aco', '$2y$10$KP1fEJu3RRBrJhZ.nATxke.us/LazDmhf2jP7ydkaGIapDSPPePD2', 'Aleksandar', 'Trmcic', 'test@gmail.com', '0643214321', 'user', '2022-12-15 16:44:56'),
+(2, 'miki', '$2y$10$R9g7slwytF3S9CmDzXUbQO3shiQWA1cDOtkDGi/cqDPJwDXbEmHhe', 'Mike', 'Michelson', '', '0641234567', 'user', '2022-12-15 16:44:56'),
+(3, 'jane', '$2y$10$PXK4X4NWzaF.IviA3mJp..jcsqRGDgkZq.1HOuTby7c0lySvBFYP6', 'Jane', 'Johnson', '', '0601112333', 'user', '2022-12-15 16:44:56'),
+(4, 'joe', '$2y$10$b1pJuAFyuVm.vF.SlAHYVejSJIFqcHiSjDt1WrCY85ZgEljbpDDLC', 'John', 'Doe', 'my@gmail.com', '063223344', 'user', '2022-12-15 16:44:56'),
+(5, 'dave', '$2y$10$utaxJwhP8K6pFsFSqJPsfu/GwvNea8fjpER0PU1vAXX17dukmOHgy', 'Dave', 'Davidson', '', '0652002000', 'user', '2022-12-15 16:44:56'),
+(6, 'susie', '$2y$10$yo3P6r40iMQ6kRyF.EF1PO36e6iIH/8VdCQkvVXonTYU3lVqSkBNq', 'Susan', 'Richardson', '', '063333444', 'user', '2022-12-15 16:44:56'),
+(8, 'aleksandar', '$2y$10$YK94HsTAjFvEc71xz5cwEeuf/iNtxNshYoJE9fNpyjxTNQZAEH3x2', 'Aleksandar', 'Trmcic', 'aleksandar.trmcic@gmail.com', '123456789', 'admin', '2022-12-15 16:44:56'),
+(16, 'marko1231', '$2y$10$qhyUnId2zZP48auzDGsl7O1tdnBtwIY.SIbh8VRdoK0O3kk79wmoq', 'Mark', 'Markovic', 'testingtrmcicc@gmail.com', '1213213123', 'user', '2022-12-15 16:46:07');
 
 --
 -- Constraints for dumped tables
@@ -140,15 +142,15 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `e
 -- Constraints for table `friends`
 --
 ALTER TABLE `friends`
-  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`user1`) REFERENCES `users` (`username`),
-  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`user2`) REFERENCES `users` (`username`);
+  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`user1`) REFERENCES `users` (`username`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`user2`) REFERENCES `users` (`username`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `msg`
 --
 ALTER TABLE `msg`
-  ADD CONSTRAINT `msg_ibfk_1` FOREIGN KEY (`sender`) REFERENCES `users` (`username`),
-  ADD CONSTRAINT `msg_ibfk_2` FOREIGN KEY (`recipient`) REFERENCES `users` (`username`);
+  ADD CONSTRAINT `msg_ibfk_1` FOREIGN KEY (`sender`) REFERENCES `users` (`username`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `msg_ibfk_2` FOREIGN KEY (`recipient`) REFERENCES `users` (`username`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

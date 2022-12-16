@@ -12,8 +12,11 @@ $user = new User($database);
 
 $row = $user->get_user();
 
+if(isset($_POST['picture'])&& is_uploaded_file($_FILES['picture']['tmp_name'])){
+    header("Location: google.com");
+}
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if(isset($_POST['profile'])){
 
     // First and last name check and set
     $text_input_field_check_regEx = "/^[a-zA-Z-' ]*$/";

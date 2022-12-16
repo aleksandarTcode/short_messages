@@ -20,7 +20,6 @@ class User {
     public $email_updateErr="";
 
 
-
     public function __construct($data_base)
     {
         $this->database = $data_base;

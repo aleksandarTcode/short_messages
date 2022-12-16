@@ -20,13 +20,23 @@
                                             <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap"><?php echo $row->first_name." ".$row->last_name;?></h4>
                                             <p class="mb-0">@<?php echo $row->username;?></p>
                                             <div class="text-muted"><small>Registered: <?php echo time_elapsed_string($row->time_registered);?></small></div>
+
                                             <div class="mt-2">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fa fa-fw fa-camera"></i>
-                                                    <span>Change Photo</span>
-                                                </button>
+                                                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
+                                                    <div class="custom-file">
+                                                        <input type="file" name="picture" class="custom-file-input" id="customFile">
+                                                        <label class="custom-file-label" for="customFile">Choose profile picture</label>
+                                                    </div>
+                                                    <button class="btn btn-primary" type="submit" name="picture">
+                                                        <i class="fa fa-fw fa-camera"></i>
+                                                        <span>Change Photo</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
+
+
+
 
 
                                         <div class="text-center text-sm-right">
@@ -108,7 +118,7 @@
                                                 </div>
 
                                                 <div class="col-md-3 mt-4">
-                                                    <button class="btn btn-block btn-primary" type="submit" >Save Changes</button>
+                                                    <button class="btn btn-block btn-primary" type="submit" name="profile" >Save Changes</button>
                                                 </div>
 
 
