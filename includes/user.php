@@ -14,6 +14,10 @@ class User {
     public $emailErr="";
     public $role;
     public $role_session;
+    public $username_update;
+    public $email_update;
+    public $username_updateErr="";
+    public $email_updateErr="";
 
 
 
@@ -110,6 +114,7 @@ class User {
         $this->username = test_input($_POST['username']);
         $this->password = test_input($_POST['password']);
 
+
         try{
             $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute(array($this->username));
@@ -161,6 +166,7 @@ class User {
             $_SESSION['email'] = $row->email;
             $_SESSION['username'] = $row->username;
             $_SESSION['password_from_database'] = $row->password;
+
             return $row;
 
 
@@ -175,22 +181,39 @@ class User {
     } // end get_user
 
     public function update_user(){
+
+        $this->username_update = test_input($_POST['username_update']);
+        $this->email_update = test_input($_POST['email_update']);
         try{
-            $stmt = $this->database->conn->prepare("UPDATE users SET username=:username,first_name=:first_name,last_name=:last_name,email=:email,password=:password WHERE username=:current_username");
-            $stmt->bindParam(':username',$_SESSION['username_update']);
-            $stmt->bindParam(':first_name',$_SESSION['first_name_update']);
-            $stmt->bindParam(':last_name',$_SESSION['last_name_update']);
-            $stmt->bindParam(':email',$_SESSION['email_update']);
-            $stmt->bindParam(':password',$_SESSION['hashed_password']);
-            $stmt->bindParam(':current_username',$this->username);
+            $stmt = $this->database->conn->prepare("SELECT username,email FROM users WHERE username = ? OR email = ?;");
+            $stmt->execute(array($this->username_update,$this->email_update));
+            $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $row = $stmt->fetch();
+//                print_r($row);
+            if(($stmt->rowCount()!==0 && $row->username == $this->username_update) && ($stmt->rowCount()!==0 && $row->username == $this->username_update && $this->username!==$this->username_update)){
+                $this->username_updateErr = "Username is already taken!";
+            } else if($stmt->rowCount()!==0 && $row->email == $this->email_update){
+                $this->email_updateErr = "Email is already taken!";
+            }
+            else {
 
+                $stmt = $this->database->conn->prepare("UPDATE users SET username=:username,first_name=:first_name,last_name=:last_name,email=:email,password=:password WHERE username=:current_username");
+                $stmt->bindParam(':username', $_SESSION['username_update']);
+                $stmt->bindParam(':first_name', $_SESSION['first_name_update']);
+                $stmt->bindParam(':last_name', $_SESSION['last_name_update']);
+                $stmt->bindParam(':email', $_SESSION['email_update']);
+                $stmt->bindParam(':password', $_SESSION['hashed_password']);
+                $stmt->bindParam(':current_username', $this->username);
 
-            $stmt->execute();
+                $_SESSION['username'] = $_SESSION['username_update'];
+
+                $stmt->execute();
+            }
         }
 
         catch (PDOException $e){
-                echo "Error: ". $e->getMessage();
-            }
+            echo "Error: ". $e->getMessage();
+        }
 
 
     } // end update_user

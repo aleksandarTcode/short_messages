@@ -9,6 +9,7 @@ $_SESSION['first_name_update'] = $_SESSION['last_name_update'] = $_SESSION['user
 
 
 $user = new User($database);
+
 $row = $user->get_user();
 
 
@@ -44,7 +45,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     if($first_name_update && $last_name_update && $username_update && $email_update ){
 
         $_SESSION['current_password'] = $_POST['current_password'];
-        echo "radi ovo sad sve";
 
         if(password_verify(test_input($_POST['current_password']),$_SESSION['password_from_database'])){
 
@@ -67,7 +67,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
                 $user = new User($database);
                 $user->update_user();
-                header("Location: profile.php");
+
+
+                $username_updateErr = $user->username_updateErr;//print error message if username is taken
+                $email_updateErr = $user->email_updateErr;//print error message if email is taken
+
+                if($username_updateErr=='' && $email_updateErr==''){
+
+                    header("Location: profile.php");
+                }
 
             }
 
@@ -94,6 +102,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 print_r($_SESSION);
 print_r($_POST);
+
 ?>
 
 
