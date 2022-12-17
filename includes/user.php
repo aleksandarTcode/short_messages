@@ -189,9 +189,10 @@ class User {
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
             $row = $stmt->fetch();
 //                print_r($row);
+            //checks if username or email is taken, and also checks if updated username or email is the same as current username or email and doesn't show error if is
             if(($stmt->rowCount()!==0 && $row->username == $this->username_update) && ($stmt->rowCount()!==0 && $row->username == $this->username_update && $this->username!==$this->username_update)){
                 $this->username_updateErr = "Username is already taken!";
-            } else if($stmt->rowCount()!==0 && $row->email == $this->email_update){
+            } else if(($stmt->rowCount()!==0 && $row->email == $this->email_update) && ($stmt->rowCount()!==0 && $row->email == $this->email_update && $_SESSION['email'] !== $_SESSION['email_update'])){
                 $this->email_updateErr = "Email is already taken!";
             }
             else {

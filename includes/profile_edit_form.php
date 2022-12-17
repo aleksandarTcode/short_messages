@@ -44,6 +44,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item"><a href="" class="active nav-link">Settings</a></li>
                                 </ul>
@@ -118,7 +120,7 @@
                                                 </div>
 
                                                 <div class="col-md-3 mt-4">
-                                                    <button class="btn btn-block btn-primary" type="submit" name="profile" >Save Changes</button>
+                                                    <button class="btn btn-block btn-primary" type="submit" name="profile">Save Changes</button>
                                                 </div>
 
 

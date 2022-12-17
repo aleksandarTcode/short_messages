@@ -5,6 +5,8 @@
 $first_name_updateErr = $last_name_updateErr = $username_updateErr = $email_updateErr =  $new_passwordErr = $confirm_passwordErr = $current_passwordErr = "";
 $first_name_update = $last_name_update = $username_update = $email_update = $new_password = $confirm_password = $current_password = "";
 
+$onclick = "";
+
 $_SESSION['first_name_update'] = $_SESSION['last_name_update'] = $_SESSION['username_update'] = $_SESSION['email_update'] = $_SESSION['new_password'] = $_SESSION['confirm_password'] = $_SESSION['hashed_password'] = $_SESSION['current_password'] = "" ;
 
 
@@ -47,6 +49,7 @@ if(isset($_POST['profile'])){
 
     if($first_name_update && $last_name_update && $username_update && $email_update ){
 
+
         $_SESSION['current_password'] = $_POST['current_password'];
 
         if(empty($_POST['current_password'])){
@@ -59,6 +62,7 @@ if(isset($_POST['profile'])){
 
             $username_updateErr = $user->username_updateErr;//print error message if username is taken
             $email_updateErr = $user->email_updateErr;//print error message if email is taken
+
 
             if($username_updateErr=='' && $email_updateErr==''){
 
@@ -91,15 +95,15 @@ if(isset($_POST['profile'])){
                 $username_updateErr = $user->username_updateErr;//print error message if username is taken
                 $email_updateErr = $user->email_updateErr;//print error message if email is taken
 
-                if($username_updateErr=='' && $email_updateErr==''){
 
+                if($username_updateErr=='' && $email_updateErr==''){
                     header("Location: profile.php");
                 }
 
             }
 
         }else {
-            $current_passwordErr = "That is not your current password, please try again or leave this field empty!";
+            $current_passwordErr = "That is not your current password, please try again or leave this field empty if you don't want to change you password!";
         }
 
 
