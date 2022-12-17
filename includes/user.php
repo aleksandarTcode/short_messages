@@ -131,7 +131,7 @@ class User {
                     header("Location: home.php");
                 }else if($row->username == $this->username && password_verify($this->password,$row->password ) && $this->role == 'admin'){
                     $_SESSION['username'] = $this->username;
-                    header("Location: admin.php");
+                    header("Location: home.php");
                 }
                 else{
                     set_message("Your Password is wrong!");
