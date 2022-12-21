@@ -58,7 +58,7 @@
 
     // For the name to appear when select image for upload
     $(".custom-file-input").on("change", function() {
-        var fileName = $(this).val().split("\\").pop();
+        var fileName = $(this).val().split("\\").pop().substr(0, 25);
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
 

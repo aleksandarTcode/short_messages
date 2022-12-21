@@ -20,11 +20,12 @@ class User {
     public $email_updateErr="";
 
 
-    public $target_dir = "img/";
+    public $target_dir = "img/profile_photos/";
     public $target_file;
     public $uploadOk = 1;
     public $imageFileType;
     public $imageMsg = "";
+    public $user_photo = "";
 
 
     public function __construct($data_base)
@@ -173,6 +174,8 @@ class User {
             $_SESSION['username'] = $row->username;
             $_SESSION['password_from_database'] = $row->password;
 
+            $this->user_photo = $row->user_photo;
+
             return $row;
 
 
@@ -227,9 +230,9 @@ class User {
 
     public function upload_profile_image(){
 
-
         // Check if image file is an actual image or fake image
         $this->target_file = $this->target_dir . basename($_FILES["profile_photo"]["name"]);
+        echo $this->target_file;
         $this->imageFileType = strtolower(pathinfo($this->target_file, PATHINFO_EXTENSION));
         $check = getimagesize($_FILES["profile_photo"]["tmp_name"]);
         if ($check !== false) {

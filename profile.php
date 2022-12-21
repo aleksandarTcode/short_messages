@@ -12,17 +12,14 @@ $_SESSION['first_name_update'] = $_SESSION['last_name_update'] = $_SESSION['user
 
 $user = new User($database);
 
-$row = $user->get_user();
 
-//if(isset($_POST['picture'])&& is_uploaded_file($_FILES['profile_photo']['tmp_name'])){
-//    print_r($_FILES);
-//}
 
-if(isset($_POST["picture"])) {
+
+if(isset($_POST["picture"]) && is_uploaded_file($_FILES['profile_photo']['tmp_name'])) {
     $user->upload_profile_image();
-}
+} // end upload profile picture form if
 
-
+$row = $user->get_user();
 
 if(isset($_POST['profile'])){
 
@@ -120,7 +117,7 @@ if(isset($_POST['profile'])){
     }
 
 
-} //end if
+} //end edit profile form if
 
 print_r($_SESSION);
 echo "<br>";
@@ -128,10 +125,7 @@ print_r($_POST);
 echo "<br>";
 print_r($_FILES);
 
-
 ?>
-
-
 
 <?php include ("includes/profile_edit_form.php") ?>
 
