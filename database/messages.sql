@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 16, 2022 at 02:16 PM
+-- Generation Time: Dec 21, 2022 at 07:52 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.12
 
@@ -95,7 +95,7 @@ INSERT INTO `msg` (`id`, `sender`, `recipient`, `msg_text`, `time`, `sent_msg`, 
 (18, 'dave', 'aco', '<p>hey im great, you</p>', '2021-03-30 09:22:51', 1, 1),
 (19, 'joe', 'dave', '<p>who is that</p>\r\n', '2021-03-30 10:35:46', 1, 1),
 (20, 'aco', 'dave', '<p>next week</p>\r\n', '2021-04-01 10:35:32', 0, 1),
-(21, 'aco', 'dave', '<p>heyyy</p>\r\n', '2022-10-05 08:02:47', 0, 0),
+(21, 'aco', 'dave', '<p>heyyy</p>\r\n', '2022-10-05 08:02:47', 0, 1),
 (22, 'aco', 'susie', '<p>hey</p>\r\n', '2022-11-22 10:18:02', 0, 0),
 (23, 'dave', 'aco', '<p>how are you?</p>\r\n', '2022-11-22 10:19:10', 0, 1);
 
@@ -115,24 +115,26 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `role` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user',
+  `user_photo` text COLLATE utf8_unicode_ci,
   `time_registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `role`, `time_registered`) VALUES
-(1, 'aco', '$2y$10$KP1fEJu3RRBrJhZ.nATxke.us/LazDmhf2jP7ydkaGIapDSPPePD2', 'Aleksandar', 'Trmcic', 'test@gmail.com', '0643214321', 'user', '2022-12-15 16:44:56'),
-(2, 'miki', '$2y$10$R9g7slwytF3S9CmDzXUbQO3shiQWA1cDOtkDGi/cqDPJwDXbEmHhe', 'Mike', 'Michelson', '', '0641234567', 'user', '2022-12-15 16:44:56'),
-(3, 'jane', '$2y$10$PXK4X4NWzaF.IviA3mJp..jcsqRGDgkZq.1HOuTby7c0lySvBFYP6', 'Jane', 'Johnson', '', '0601112333', 'user', '2022-12-15 16:44:56'),
-(4, 'joe', '$2y$10$b1pJuAFyuVm.vF.SlAHYVejSJIFqcHiSjDt1WrCY85ZgEljbpDDLC', 'John', 'Doe', 'my@gmail.com', '063223344', 'user', '2022-12-15 16:44:56'),
-(5, 'dave', '$2y$10$utaxJwhP8K6pFsFSqJPsfu/GwvNea8fjpER0PU1vAXX17dukmOHgy', 'Dave', 'Davidson', '', '0652002000', 'user', '2022-12-15 16:44:56'),
-(6, 'susie', '$2y$10$yo3P6r40iMQ6kRyF.EF1PO36e6iIH/8VdCQkvVXonTYU3lVqSkBNq', 'Susan', 'Richardson', '', '063333444', 'user', '2022-12-15 16:44:56'),
-(8, 'aleksandar', '$2y$10$YK94HsTAjFvEc71xz5cwEeuf/iNtxNshYoJE9fNpyjxTNQZAEH3x2', 'Aleksandar', 'Trmcic', 'aleksandar.trmcic@gmail.com', '123456789', 'admin', '2022-12-15 16:44:56'),
-(16, 'marko1231', '$2y$10$qhyUnId2zZP48auzDGsl7O1tdnBtwIY.SIbh8VRdoK0O3kk79wmoq', 'Mark', 'Markovic', 'testingtrmcicc@gmail.com', '1213213123', 'user', '2022-12-15 16:46:07');
+INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `email`, `phone`, `role`, `user_photo`, `time_registered`) VALUES
+(1, 'aco', '$2y$10$0vGkFt9Ygws.l4iy5.SJG.OeTIQpJDJkTcgwZGObU5eIzBHdwLg4K', 'Aleksandar', 'Trmcic', 'aca@gmail.com', '0643214321', 'user', NULL, '2022-12-15 16:44:56'),
+(2, 'miki', '$2y$10$R9g7slwytF3S9CmDzXUbQO3shiQWA1cDOtkDGi/cqDPJwDXbEmHhe', 'Mike', 'Michelson', 'miki@gmail.com', '0641234567', 'user', NULL, '2022-12-15 16:44:56'),
+(3, 'jane', '$2y$10$PXK4X4NWzaF.IviA3mJp..jcsqRGDgkZq.1HOuTby7c0lySvBFYP6', 'Jane', 'Johnson', 'jane@gmail.com', '0601112333', 'user', NULL, '2022-12-15 16:44:56'),
+(4, 'joe', '$2y$10$b1pJuAFyuVm.vF.SlAHYVejSJIFqcHiSjDt1WrCY85ZgEljbpDDLC', 'John', 'Doe', 'joe@gmail.com', '063223344', 'user', NULL, '2022-12-15 16:44:56'),
+(5, 'dave', '$2y$10$utaxJwhP8K6pFsFSqJPsfu/GwvNea8fjpER0PU1vAXX17dukmOHgy', 'Dave', 'Davidson', 'dave@gmail.com', '0652002000', 'user', NULL, '2022-12-15 16:44:56'),
+(6, 'susie', '$2y$10$yo3P6r40iMQ6kRyF.EF1PO36e6iIH/8VdCQkvVXonTYU3lVqSkBNq', 'Susan', 'Richardson', 'susie@gmail.com', '063333444', 'user', NULL, '2022-12-15 16:44:56'),
+(8, 'aleksandar', '$2y$10$kEEQlh4ycf//7oD.SvUT4.6U/mWqa6.d6LnHBlCoqB89sPKnr6qiS', 'Aleksandar', 'Trmcic', 'coa@gmail.com', '123456789', 'admin', NULL, '2022-12-15 16:44:56'),
+(16, 'marko', '$2y$10$qhyUnId2zZP48auzDGsl7O1tdnBtwIY.SIbh8VRdoK0O3kk79wmoq', 'Marko', 'Markovic', 'marko@gmail.com', '1213213123', 'user', NULL, '2022-12-15 16:46:07'),
+(17, 'test', '$2y$10$vUHq2RYur5k.PbnS.5tU.u87ypLTGXrl5ZZBnnmLWnjYjbyQ6ePju', 'test firstname', 'test lastname', 'test@gmail.com', '454545545', 'user', NULL, '2022-12-17 13:58:21');
 
 --
 -- Constraints for dumped tables
