@@ -20,6 +20,13 @@ class User {
     public $email_updateErr="";
 
 
+    public $target_dir = "img/";
+    public $target_file;
+    public $uploadOk = 1;
+    public $imageFileType;
+    public $imageMsg = "";
+
+
     public function __construct($data_base)
     {
         $this->database = $data_base;
@@ -217,6 +224,68 @@ class User {
 
 
     } // end update_user
+
+    public function upload_profile_image(){
+
+
+        // Check if image file is an actual image or fake image
+        $this->target_file = $this->target_dir . basename($_FILES["profile_photo"]["name"]);
+        $this->imageFileType = strtolower(pathinfo($this->target_file, PATHINFO_EXTENSION));
+        $check = getimagesize($_FILES["profile_photo"]["tmp_name"]);
+        if ($check !== false) {
+            $this->imageMsg = "File is an image - " . $check["mime"] . ".";
+            $this->uploadOk = 1;
+        } else {
+            $this->imageMsg = "File is not an image";
+            $this->uploadOk = 0;
+        }
+
+        // Check if file already exists
+        if (file_exists($this->target_file)) {
+            $this->imageMsg = "Sorry, file already exists";
+            $this->uploadOk = 0;
+        }
+
+        // Check file size
+        if ($_FILES["profile_photo"]["size"] > 500000) {
+            $this->imageMsg = "Sorry, your file is too large";
+            $this->uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        if ($this->imageFileType != "jpg" && $this->imageFileType != "png" && $this->imageFileType != "jpeg"
+            && $this->imageFileType != "gif") {
+            $this->imageMsg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed";
+            $this->uploadOk = 0;
+        }
+
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($this->uploadOk == 0) {
+            $this->imageMsg = $this->imageMsg.", your file was not uploaded.";
+// if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["profile_photo"]["tmp_name"], $this->target_file)) {
+                $this->imageMsg = "The file " . htmlspecialchars(basename($_FILES["profile_photo"]["name"])) . " has been uploaded.";
+                try{
+                    $stmt = $this->database->conn->prepare("UPDATE users SET user_photo=? WHERE username=?");
+
+//                    $stmt->bindParam(':user_photo', "tdfg");
+//                    $stmt->bindParam(':username', $this->username);
+
+                    $stmt->execute(array($_FILES["profile_photo"]["name"],$this->username));
+
+                }  catch (PDOException $e){
+                    echo "Error: ". $e->getMessage();
+                }
+
+            } else {
+                $this->imageMsg = "Sorry, there was an error uploading your file.";
+            }
+        }
+
+
+    } //End upload_profile_image
 
     public function messages_for_current_user_with_pagination($query,$query_variable){
 

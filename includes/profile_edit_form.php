@@ -27,6 +27,7 @@
                                                         <input type="file" name="profile_photo" class="custom-file-input" id="profile_photo">
                                                         <label class="custom-file-label" for="profile_photo">Choose profile picture</label>
                                                     </div>
+                                                    <span class="error"><?php echo $user->imageMsg;?></span>
                                                     <button class="btn btn-primary" type="submit" name="picture">
                                                         <i class="fa fa-fw fa-camera"></i>
                                                         <span>Change Photo</span>
