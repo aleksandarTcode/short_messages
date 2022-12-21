@@ -14,8 +14,8 @@ $user = new User($database);
 
 $row = $user->get_user();
 
-if(isset($_POST['picture'])&& is_uploaded_file($_FILES['picture']['tmp_name'])){
-    header("Location: google.com");
+if(isset($_POST['picture'])&& is_uploaded_file($_FILES['profile_photo']['tmp_name'])){
+    print_r($_FILES);
 }
 
 if(isset($_POST['profile'])){
@@ -117,7 +117,11 @@ if(isset($_POST['profile'])){
 } //end if
 
 print_r($_SESSION);
+echo "<br>";
 print_r($_POST);
+echo "<br>";
+print_r($_FILES);
+
 
 ?>
 

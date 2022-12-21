@@ -20,37 +20,6 @@
 
     $('#year').text(new Date().getFullYear());
 
-    // //    check or uncheck checkboxes for each radio button
-    // $("input[value='small']").change(function() {
-    //     $("input[type='checkbox']").prop('disabled', true).prop('checked', false);
-    //     $("input[value='twix']").prop('disabled', false);
-    //     $("input[value='crumbs']").prop('disabled', false);
-    // });
-    //
-    // $("input[value='medium']").change(function() {
-    //     $("input[type='checkbox']").prop('disabled', true).prop('checked', false);
-    //     $("input[value='nutella']").prop('disabled', false);
-    //     $("input[value='crumbs']").prop('disabled', false);
-    // });
-    //
-    // $("input[value='large']").change(function() {
-    //     $("input[type='checkbox']").prop('disabled', true).prop('checked', false);
-    //     $("input[value='twix']").prop('disabled', false);
-    //     $("input[value='nutella']").prop('disabled', false);
-    //     $("input[value='coconut']").prop('disabled', false);
-    //     $("input[value='plazma']").prop('disabled', false);
-    //     $("input[value='cherry']").prop('disabled', false);
-    // });
-
-
-    // document
-    //     .getElementById("submit")
-    //     .addEventListener("click", function( e ){ //e => event
-    //         if( ! confirm("Have you finished with your order?") ){
-    //             e.preventDefault(); // ! => don't want to do this
-    //         }
-    //     });
-
 
 </script>
 

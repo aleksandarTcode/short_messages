@@ -24,8 +24,8 @@
                                             <div class="mt-2">
                                                 <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
                                                     <div class="custom-file">
-                                                        <input type="file" name="picture" class="custom-file-input" id="customFile">
-                                                        <label class="custom-file-label" for="customFile">Choose profile picture</label>
+                                                        <input type="file" name="profile_photo" class="custom-file-input" id="profile_photo">
+                                                        <label class="custom-file-label" for="profile_photo">Choose profile picture</label>
                                                     </div>
                                                     <button class="btn btn-primary" type="submit" name="picture">
                                                         <i class="fa fa-fw fa-camera"></i>
