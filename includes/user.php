@@ -231,9 +231,10 @@ class User {
     public function upload_profile_image(){
 
         // Check if image file is an actual image or fake image
-        $this->target_file = $this->target_dir . basename($_FILES["profile_photo"]["name"]);
-        echo $this->target_file;
-        $this->imageFileType = strtolower(pathinfo($this->target_file, PATHINFO_EXTENSION));
+//        $this->target_file = $this->target_dir . basename($_FILES["profile_photo"]["name"]);
+        $this->imageFileType = strtolower(pathinfo(basename($_FILES["profile_photo"]["name"]), PATHINFO_EXTENSION));
+        $this->target_file = $this->target_dir . date('m-d-Y_H-i-s') .".".$this->imageFileType;
+//        $this->target_file = $this->target_dir."miki.jpg";
         $check = getimagesize($_FILES["profile_photo"]["tmp_name"]);
         if ($check !== false) {
             $this->imageMsg = "File is an image - " . $check["mime"] . ".";
@@ -243,11 +244,11 @@ class User {
             $this->uploadOk = 0;
         }
 
-        // Check if file already exists
-        if (file_exists($this->target_file)) {
-            $this->imageMsg = "Sorry, file already exists";
-            $this->uploadOk = 0;
-        }
+        // Check if file already exists *not necessary anymore after image name has been changed to be a unique timestamp
+//        if (file_exists($this->target_file)) {
+//            $this->imageMsg = "Sorry, file already exists";
+//            $this->uploadOk = 0;
+//        }
 
         // Check file size
         if ($_FILES["profile_photo"]["size"] > 600000) {
@@ -266,7 +267,7 @@ class User {
         // Check if $uploadOk is set to 0 by an error
         if ($this->uploadOk == 0) {
             $this->imageMsg = $this->imageMsg.", your file was not uploaded.";
-// if everything is ok, try to upload file
+// if everything is ok, try to upload a file
         } else {
             if (move_uploaded_file($_FILES["profile_photo"]["tmp_name"], $this->target_file)) {
                 $this->imageMsg = "The file " . htmlspecialchars(basename($_FILES["profile_photo"]["name"])) . " has been uploaded.";
@@ -276,7 +277,7 @@ class User {
 //                    $stmt->bindParam(':user_photo', "tdfg");
 //                    $stmt->bindParam(':username', $this->username);
 
-                    $stmt->execute(array($_FILES["profile_photo"]["name"],$this->username));
+                    $stmt->execute(array(date('m-d-Y_H-i-s').".".$this->imageFileType, $this->username));
 
                 }  catch (PDOException $e){
                     echo "Error: ". $e->getMessage();
