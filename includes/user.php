@@ -250,7 +250,7 @@ class User {
         }
 
         // Check file size
-        if ($_FILES["profile_photo"]["size"] > 500000) {
+        if ($_FILES["profile_photo"]["size"] > 600000) {
             $this->imageMsg = "Sorry, your file is too large";
             $this->uploadOk = 0;
         }

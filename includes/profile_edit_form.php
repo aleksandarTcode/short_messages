@@ -10,7 +10,7 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-auto mb-3">
                                         <div class="col-md-6">
-                                            <img src="img/profile_photos/<?php echo $user->user_photo; ?>" alt="profile picture" class="img-fluid mb-3 rounded-circle">
+                                            <img src="img/profile_photos/<?php echo $user->user_photo; ?>" style="width: 300px" alt="profile picture" class="img-fluid mb-3 rounded-circle">
                                         </div>
                                     </div>
                                     <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">

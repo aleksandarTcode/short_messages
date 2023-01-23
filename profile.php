@@ -2,6 +2,7 @@
 
 <?php
 
+// Initialize variables for error messages and form input
 $first_name_updateErr = $last_name_updateErr = $username_updateErr = $email_updateErr =  $new_passwordErr = $confirm_passwordErr = $current_passwordErr = $imageMsg = "";
 $first_name_update = $last_name_update = $username_update = $email_update = $new_password = $confirm_password = $current_password = "";
 
@@ -13,8 +14,7 @@ $_SESSION['first_name_update'] = $_SESSION['last_name_update'] = $_SESSION['user
 $user = new User($database);
 
 
-
-
+// Check if a profile picture is being uploaded
 if(isset($_POST["picture"]) && is_uploaded_file($_FILES['profile_photo']['tmp_name'])) {
     $user->upload_profile_image();
 } // end upload profile picture form if
