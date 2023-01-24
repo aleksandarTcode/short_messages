@@ -66,3 +66,16 @@ body {
 input[type="file"] {
   width: 150px;
 }
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#search-results {
+  min-height: 38px; /*same height as input */
+  padding: .375rem .75rem; /*same padding as input */
+  border-radius: .25rem; /*same border-radius as input */
+  border-color: #ced4da; /*same border-color as input */
+  background-color: #fff; /*same background-color as input */
+}

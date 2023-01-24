@@ -35,7 +35,10 @@
                     <a href="sent.php" class="nav-link">Sent</a>
                 </li>
                 <li class="nav-item">
-                    <a href="search.php" class="nav-link">Search</a>
+                    <a href="search.php" class="nav-link">Search Msg</a>
+                </li>
+                <li class="nav-item">
+                    <a href="friends.php" class="nav-link">Friends</a>
                 </li>
                 <li>
                     <ul class="navbar-nav ml-auto">

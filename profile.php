@@ -119,11 +119,11 @@ if(isset($_POST['profile'])){
 
 } //end edit profile form if
 
-print_r($_SESSION);
-echo "<br>";
-print_r($_POST);
-echo "<br>";
-print_r($_FILES);
+//print_r($_SESSION);
+//echo "<br>";
+//print_r($_POST);
+//echo "<br>";
+//print_r($_FILES);
 
 ?>
 

@@ -160,6 +160,20 @@ class User {
 
     } // end login_user
 
+    public function get_all_users_for_search(){
+        try{
+            $stmt = $this->database->conn->prepare("SELECT id,username,user_photo FROM users");
+            $stmt->execute();
+
+            $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $row = $stmt->fetchAll();
+            return $row;
+            }
+            catch (PDOException $e){
+                echo "Error: ". $e->getMessage();
+            }
+            }//end get_all_users
+
     public function get_user(){
 
         try{
