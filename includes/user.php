@@ -532,6 +532,25 @@ class User {
 
     }
 
+    public function check_if_user_and_friend_in_search_are_already_friends($friend_from_search){
+        try{
+            $stmt = $this->database->conn->prepare("SELECT user2 as friend FROM friends WHERE user1 = ? AND user2 = ? UNION SELECT user1 as friend FROM friends WHERE user2= ? AND user1=?;");
+            $stmt->execute(array($this->username,$friend_from_search,$this->username,$friend_from_search));
+
+            $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $row = $stmt->fetchAll();
+
+            if($stmt->rowCount()){
+                return true;
+            }else return false;
+
+        }
+        catch (PDOException $e){
+            echo "Error: ". $e->getMessage();
+        }
+
+    }
+
 
 
 

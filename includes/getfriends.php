@@ -27,15 +27,15 @@ if ($q !== "") {
 
 
         if (strpos($friends_search,$q)!==false) {
-            //a second condition removes from search results own profile
-            if ($hint === "" && $user->username!==$friend->username) {
+            //the second condition removes from search results own profile, third condition removes from search results profiles that are already friends
+            if ($hint === "" && $user->username!==$friend->username && $user->check_if_user_and_friend_in_search_are_already_friends($friend->username)==false) {
                $hint = <<<DEILMITER
-  <div style="min-height: 65px"><br><a href = 'friend_profile_from_search.php?id={$friend->id}'>{$friend->username}<img src='img/profile_photos/{$friend->user_photo}' style='float: right; width: 60px; height: 60px; object-fit: cover;'></a></div>
+  <div style="min-height: 65px"><br><a href="add_friend_from_search.php?username={$friend->username}" class="btn btn-outline-info btn-sm ml-2">Add <strong>{$friend->username}</strong> as a friend</a><img src='img/profile_photos/{$friend->user_photo}' style='float: right; width: 60px; height: 60px; object-fit: cover;'></div>
 DEILMITER;
 
-            } elseif($user->username!==$friend->username) {
+            } elseif($user->username!==$friend->username && $user->check_if_user_and_friend_in_search_are_already_friends($friend->username)==false) {
                 $hint .= <<<DEILMITER
-  <div style="min-height: 65px"><br><a href = 'friend_profile_from_search.php?id={$friend->id}'>{$friend->username}<img src='img/profile_photos/{$friend->user_photo}' style='float: right; width: 60px; height: 60px; object-fit: cover;'></a></div>
+  <div style="min-height: 65px"><br><a href="add_friend_from_search.php?username={$friend->username}" class="btn btn-outline-info btn-sm ml-2">Add <strong>{$friend->username}</strong> as a friend</a><img src='img/profile_photos/{$friend->user_photo}' style='float: right; width: 60px; height: 60px; object-fit: cover;'></div>
 DEILMITER;
             }//end else
         }//end strpos if
