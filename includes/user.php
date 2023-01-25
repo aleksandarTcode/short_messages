@@ -551,7 +551,14 @@ class User {
 
     }
 
-
+    public function make_a_friend($user2){
+        try{
+            $stmt = $this->database->conn->prepare("INSERT INTO friends (user1, user2) VALUES (?,?)");
+            $stmt->execute(array($this->username,$user2));
+    }catch (PDOException $e){
+        echo "Error: ". $e->getMessage();
+    }
+    }
 
 
 

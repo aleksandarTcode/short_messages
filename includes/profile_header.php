@@ -38,7 +38,7 @@
                     <a href="search.php" class="nav-link">Search Msg</a>
                 </li>
                 <li class="nav-item">
-                    <a href="friends.php" class="nav-link">Friends</a>
+                    <a href="friends.php" class="nav-link">Add Friends</a>
                 </li>
                 <li>
                     <ul class="navbar-nav ml-auto">
