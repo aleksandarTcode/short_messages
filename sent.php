@@ -4,11 +4,11 @@
 
 <?php
 
-
-//print_r($_SESSION);
-
 $user = new User($database); //$database is instance of Database class
-//$user->set_username($_SESSION['username']);
+
+$row = $user->messages_for_current_user_with_pagination('SELECT msg.id,msg.recipient,msg.msg_text,msg.time,msg.read_msg,users.user_photo FROM msg LEFT JOIN users ON msg.recipient = users.username WHERE sender = ? ORDER BY time DESC', $user->username);
+
+if ($row!==null){
 
 ?>
 
@@ -32,9 +32,7 @@ $user = new User($database); //$database is instance of Database class
         <tr>
 
             <?php
-//            $row = $user->messages_for_current_user_with_pagination('SELECT id,recipient,msg_text,time,read_msg FROM msg WHERE sender = ? ORDER BY time DESC', $user->username);
             // for user.photo select from database
-            $row = $user->messages_for_current_user_with_pagination('SELECT msg.id,msg.recipient,msg.msg_text,msg.time,msg.read_msg,users.user_photo FROM msg LEFT JOIN users ON msg.recipient = users.username WHERE sender = ? ORDER BY time DESC', $user->username);
 
             if($row){
             foreach($row as $msg){
@@ -55,6 +53,14 @@ $user = new User($database); //$database is instance of Database class
     </tr>
     </tbody>
 </table>
+
+    <?php
+}// end if row exists
+
+else {
+    echo "There are no messages here!";
+}
+?>
 
 <?php include("includes/home_footer.php"); ?>
 

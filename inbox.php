@@ -5,15 +5,13 @@
 <?php
 
 
-//print_r($_SESSION);
-
 $user = new User($database); //$database is instance of Database class
-//$user->set_username($_SESSION['username']);
 
+$row = $user->messages_for_current_user_with_pagination('SELECT msg.id,msg.sender,msg.msg_text,msg.time,msg.read_msg,users.user_photo FROM msg LEFT JOIN users ON msg.sender = users.username WHERE recipient = ? ORDER BY time DESC', $user->username);
 
+if ($row!==null){
 
 ?>
-
 
 <table class='table table-bordered mt-5'>
     <thead>
@@ -29,9 +27,7 @@ $user = new User($database); //$database is instance of Database class
     <tbody>
     <tr>
         <?php
-//        $row = $user->messages_for_current_user_with_pagination('SELECT id,sender,msg_text,time,read_msg FROM msg WHERE recipient = ? ORDER BY time DESC',$user->username);
         // for user.photo select from database
-        $row = $user->messages_for_current_user_with_pagination('SELECT msg.id,msg.sender,msg.msg_text,msg.time,msg.read_msg,users.user_photo FROM msg LEFT JOIN users ON msg.sender = users.username WHERE recipient = ? ORDER BY time DESC', $user->username);
         if($row){
         foreach($row as $msg){
             ?>
@@ -57,6 +53,14 @@ $user = new User($database); //$database is instance of Database class
 
 
 </table>
+
+<?php
+}// end if row exists
+
+else {
+    echo "There are no messages in inbox!";
+}
+?>
 
 
 

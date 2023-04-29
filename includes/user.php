@@ -84,20 +84,14 @@ class User {
                 $this->mail->SMTPSecure = "tls";
                 $this->mail->Port       = 587;
                 $this->mail->Host       = "smtp.gmail.com";
-                $this->mail->Username   = "testingtrmcic@gmail.com";
-                $this->mail->Password   = "ocphwwhfisxkjjjs";
+                $this->mail->Username   = "your_usernam";
+                $this->mail->Password   = "your_password";
 
                 //Recipients
                 $this->mail->setFrom('msgnow@example.com', 'MsgNow');
                 $this->mail->addAddress($_SESSION['email'], $_SESSION['first_name']." ".$_SESSION['last_name']);     //Add a recipient
-//                $this->mail->addAddress('ellen@example.com');               //Name is optional
                 $this->mail->addReplyTo('testingtrmcic@gmail.com', 'Aleksandar');
-//                $this->mail->addCC('cc@example.com');
-//                $this->mail->addBCC('bcc@example.com');
 
-//                //Attachments
-//                $this->mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-//                $this->mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
                 //Content
                 $this->mail->isHTML(true);                                  //Set email format to HTML
@@ -105,8 +99,13 @@ class User {
                 $this->mail->Body    = "<h3>Dear {$_SESSION['first_name']}, thank you for registering on our store!</h3><br><p>Your <b>username</b> is: {$_SESSION['username']}</p><p>Your <b>password</b> is: {$_SESSION['password']}</p>";
                 $this->mail->AltBody = 'Thank you for registering on our store!';
 
-                $this->mail->send();
-                echo 'Message has been sent';
+                try{
+                    $this->mail->send();
+                    echo 'Message has been sent';
+                } catch (Exception $e){
+                    //
+                }
+
 
             }
 
