@@ -47,7 +47,7 @@ All example users have the password 123456@Aa
 * View your messages in the inbox and sent pages.
 * Visit the profile page to manage your account settings and profile picture.
 
-## Contributing
+## Contributing 
 
 Contributions are welcome! Please fork the repository and create a pull request with your changes.
 
