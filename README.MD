@@ -14,7 +14,7 @@ Short Messages is a PHP-based chat application that enables users to register, a
 * Messages can be in status waiting for delivery or sent
 * Threaded messages view with all messages counter
 * Timestamps for sent messages
-* Sending emails to users with PHPMailer
+* Sending emails to users using PHPMailer
 
 ## Installation
 
