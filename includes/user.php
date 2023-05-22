@@ -55,7 +55,7 @@ class User {
         $this->email = test_input($_POST['email']);
         $this->hashed_password = $_SESSION['hashed_password'];
         try{
-            $stmt = $this->database->conn->prepare("SELECT username,email FROM users WHERE username = ? OR email = ?;");
+            $stmt = $this->database->prepare("SELECT username,email FROM users WHERE username = ? OR email = ?;");
             $stmt->execute(array($this->username,$this->email));
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
             $row = $stmt->fetch();
@@ -66,7 +66,7 @@ class User {
                 $this->emailErr = "Email is already taken!";
             }
             else {
-                $stmt = $this->database->conn->prepare("INSERT INTO users (username,password,email,first_name,last_name,phone) VALUES (:username,:password,:email,:first_name,:last_name,:phone)");
+                $stmt = $this->database->prepare("INSERT INTO users (username,password,email,first_name,last_name,phone) VALUES (:username,:password,:email,:first_name,:last_name,:phone)");
                 $stmt->bindParam(':username',$this->username);
                 $stmt->bindParam(':password',$this->hashed_password);
                 $stmt->bindParam(':email',$_SESSION['email']);
@@ -122,7 +122,7 @@ class User {
 
 
         try{
-            $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt = $this->database->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute(array($this->username));
 
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -161,7 +161,7 @@ class User {
 
     public function get_all_users_for_search(){
         try{
-            $stmt = $this->database->conn->prepare("SELECT id,username,user_photo FROM users");
+            $stmt = $this->database->prepare("SELECT id,username,user_photo FROM users");
             $stmt->execute();
 
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -176,7 +176,7 @@ class User {
     public function get_user(){
 
         try{
-            $stmt = $this->database->conn->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt = $this->database->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute(array($this->username));
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
             $row = $stmt->fetch();
@@ -207,7 +207,7 @@ class User {
         $this->username_update = test_input($_POST['username_update']);
         $this->email_update = test_input($_POST['email_update']);
         try{
-            $stmt = $this->database->conn->prepare("SELECT username,email FROM users WHERE username = ? OR email = ?;");
+            $stmt = $this->database->prepare("SELECT username,email FROM users WHERE username = ? OR email = ?;");
             $stmt->execute(array($this->username_update,$this->email_update));
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
             $row = $stmt->fetch();
@@ -220,7 +220,7 @@ class User {
             }
             else {
 
-                $stmt = $this->database->conn->prepare("UPDATE users SET username=:username,first_name=:first_name,last_name=:last_name,email=:email,password=:password WHERE username=:current_username");
+                $stmt = $this->database->prepare("UPDATE users SET username=:username,first_name=:first_name,last_name=:last_name,email=:email,password=:password WHERE username=:current_username");
                 $stmt->bindParam(':username', $_SESSION['username_update']);
                 $stmt->bindParam(':first_name', $_SESSION['first_name_update']);
                 $stmt->bindParam(':last_name', $_SESSION['last_name_update']);
@@ -285,7 +285,7 @@ class User {
             if (move_uploaded_file($_FILES["profile_photo"]["tmp_name"], $this->target_file)) {
                 $this->imageMsg = "The file " . htmlspecialchars(basename($_FILES["profile_photo"]["name"])) . " has been uploaded.";
                 try{
-                    $stmt = $this->database->conn->prepare("UPDATE users SET user_photo=? WHERE username=?");
+                    $stmt = $this->database->prepare("UPDATE users SET user_photo=? WHERE username=?");
 
 //                    $stmt->bindParam(':user_photo', "tdfg");
 //                    $stmt->bindParam(':username', $this->username);
@@ -308,7 +308,7 @@ class User {
 
 
 
-        $stmt = $this->database->conn->prepare($query);
+        $stmt = $this->database->prepare($query);
         $stmt->execute(array($query_variable)); // this is recipient or sender, execute parameter must be an array
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
         $row = $stmt->fetchAll();
@@ -405,7 +405,7 @@ class User {
 
             try{
 
-                $stmt2 = $this->database->conn->prepare($query .' '. $limit);
+                $stmt2 = $this->database->prepare($query .' '. $limit);
                 $stmt2->execute(array($query_variable));
                 $result2 = $stmt2->setFetchMode(PDO::FETCH_OBJ);
                 $row = $stmt2->fetchAll();
@@ -428,7 +428,7 @@ class User {
 
     public function message_thread_for_user(){
 
-        $stmt = $this->database->conn->prepare("SELECT sender,msg_text,time FROM msg WHERE (sender= ? AND recipient = ?) OR (sender= ? AND recipient= ?) ORDER BY time ASC");
+        $stmt = $this->database->prepare("SELECT sender,msg_text,time FROM msg WHERE (sender= ? AND recipient = ?) OR (sender= ? AND recipient= ?) ORDER BY time ASC");
         $stmt->execute(array($this->username, $this->friend, $this->friend, $this->username));
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
 
@@ -470,7 +470,7 @@ class User {
 
     public function get_friends_for_user(){
 
-        $stmt = $this->database->conn->prepare("SELECT user2 as friend FROM friends WHERE user1= ? UNION SELECT user1 as friend FROM friends WHERE user2= ?");
+        $stmt = $this->database->prepare("SELECT user2 as friend FROM friends WHERE user1= ? UNION SELECT user1 as friend FROM friends WHERE user2= ?");
         $stmt->execute(array($this->username,$this->username));
 
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -489,7 +489,7 @@ class User {
 
         try {
 
-            $stmt = $this->database->conn->prepare("INSERT into msg (sender, recipient, msg_text) VALUES (:sender,:recipient,:msg_text)");
+            $stmt = $this->database->prepare("INSERT into msg (sender, recipient, msg_text) VALUES (:sender,:recipient,:msg_text)");
             $stmt->bindParam(':sender',$this->username);
             $stmt->bindParam(':recipient',$this->friend);
             $stmt->bindParam(':msg_text',$this->msg_text);
@@ -505,21 +505,21 @@ class User {
 
     public function update_message_as_read($query_variable){
 
-        $stmt = $this->database->conn->prepare("UPDATE msg SET read_msg = '1' WHERE id = ?");
+        $stmt = $this->database->prepare("UPDATE msg SET read_msg = '1' WHERE id = ?");
 
         $stmt->execute(array($query_variable));
     }
 
     public function update_all_messages_as_read($query_variable){
 
-        $stmt = $this->database->conn->prepare("UPDATE msg SET read_msg = '1' WHERE sender = ? and recipient = ?");
+        $stmt = $this->database->prepare("UPDATE msg SET read_msg = '1' WHERE sender = ? and recipient = ?");
 
         $stmt->execute(array($query_variable,$this->username));
     }
 
     public function get_all_messages_for_current_user($query,$query_variable,$query_variable2){
 
-        $stmt = $this->database->conn->prepare($query);
+        $stmt = $this->database->prepare($query);
         $stmt->execute(array($query_variable,$query_variable2)); // this is recipient or sender, execute parameter must be an array
 
         $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -533,7 +533,7 @@ class User {
 
     public function check_if_user_and_friend_in_search_are_already_friends($friend_from_search){
         try{
-            $stmt = $this->database->conn->prepare("SELECT user2 as friend FROM friends WHERE user1 = ? AND user2 = ? UNION SELECT user1 as friend FROM friends WHERE user2= ? AND user1=?;");
+            $stmt = $this->database->prepare("SELECT user2 as friend FROM friends WHERE user1 = ? AND user2 = ? UNION SELECT user1 as friend FROM friends WHERE user2= ? AND user1=?;");
             $stmt->execute(array($this->username,$friend_from_search,$this->username,$friend_from_search));
 
             $result = $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -552,7 +552,7 @@ class User {
 
     public function make_a_friend($user2){
         try{
-            $stmt = $this->database->conn->prepare("INSERT INTO friends (user1, user2) VALUES (?,?)");
+            $stmt = $this->database->prepare("INSERT INTO friends (user1, user2) VALUES (?,?)");
             $stmt->execute(array($this->username,$user2));
     }catch (PDOException $e){
         echo "Error: ". $e->getMessage();
